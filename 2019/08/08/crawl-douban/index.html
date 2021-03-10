@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content>
+  <meta name="author" content="呆呆">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="记一次用Scrapy爬取豆瓣电影top250">
+  <meta property="og:description" content>
+  <meta property="og:site_name" content="呆忆">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="http://daiziqi.tk">
+  
+    <link rel="alternate" href="/atom.xml" title="呆忆" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>呆忆</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">记一次用Scrapy爬取豆瓣电影top250</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/dzq-daidai">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/2063109448@qq.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By 呆呆</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2019-08-08</span>
+            <span class="time">08:29:19</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/爬虫/">#爬虫</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>Scrapy的使用</p>
+<a id="more"></a>
+<h1 id="记一次用Scrapy爬取豆瓣电影top250"><a href="#记一次用Scrapy爬取豆瓣电影top250" class="headerlink" title="记一次用Scrapy爬取豆瓣电影top250"></a>记一次用Scrapy爬取豆瓣电影top250</h1><hr>
+<p>我跟着这个教程走，其中发现有些问题的地方</p>
+<blockquote>
+<p>[python爬虫入门笔记：用scrapy爬豆瓣][1]<br>[1]: <a href="https://blog.csdn.net/flyingfishmark/article/details/51316159" target="_blank" rel="noopener">https://blog.csdn.net/flyingfishmark/article/details/51316159</a> “<a href="https://blog.csdn.net/flyingfishmark/article/details/51316159&quot;" target="_blank" rel="noopener">https://blog.csdn.net/flyingfishmark/article/details/51316159&quot;</a></p>
+</blockquote>
+<p><code>本文并不是教程，而是一次scrapy爬虫记录，教程详见上面链接</code></p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>Pycharm</li>
+<li>Scrapy依赖<br>  whell<br>  lxml<br>  pyOpenssl<br>  Twisted<br>  Pywin32</li>
+<li>Scrapy</li>
+</ul>
+<h2 id="1-新建项目"><a href="#1-新建项目" class="headerlink" title="1.新建项目"></a>1.新建项目</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy startproject douban</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-明确目标"><a href="#2-明确目标" class="headerlink" title="2.明确目标"></a>2.明确目标</h2><p>在Scrapy中，items是用来加载抓取内容的容器，提供了一些额外的保护减少错误。</p>
+<p>一般来说，item可以用scrapy.item.Item类来创建，并且用scrapy.item.Field对象来定义属性。</p>
+<p>接下来，我们开始来构建item模型（model）。</p>
+<p>首先，我们想要的内容有：</p>
+<ul>
+<li>电影名称（name）</li>
+<li>电影描述（movieInfo）</li>
+<li>电影评分（star)</li>
+<li>格言（quote）</li>
+</ul>
+<h2 id="3-动手"><a href="#3-动手" class="headerlink" title="3.动手"></a>3.动手</h2><p>1.首先构建item模型，修改douban目录下的items.py文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这是我已经写好的整个items.py</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define here the models for your scraped items</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># See documentation in:</span></span><br><span class="line"><span class="comment"># https://docs.scrapy.org/en/latest/topics/items.html</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoubanItem</span><span class="params">(scrapy.Item)</span>:</span></span><br><span class="line">    <span class="comment"># define the fields for your item here like:</span></span><br><span class="line">    <span class="comment"># name = scrapy.Field()</span></span><br><span class="line">    title = scrapy.Field()</span><br><span class="line">    movieInfo = scrapy.Field()</span><br><span class="line">    star = scrapy.Field()</span><br><span class="line">    quote = scrapy.Field()</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>2.制作爬虫，创建一个爬虫文件doubanspider.py于spiders目录中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这是我已经写好的整个doubanspider.py</span></span><br><span class="line"><span class="keyword">from</span> scrapy.spiders <span class="keyword">import</span> CrawlSpider</span><br><span class="line"><span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> Selector</span><br><span class="line"><span class="keyword">from</span> scrapy.http <span class="keyword">import</span> Request</span><br><span class="line"><span class="keyword">from</span> ..items <span class="keyword">import</span> DoubanItem</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Douban</span><span class="params">(CrawlSpider)</span>:</span></span><br><span class="line">    name = <span class="string">"douban"</span></span><br><span class="line">    url = <span class="string">'http://movie.douban.com/top250'</span></span><br><span class="line">    start_urls = [<span class="string">"http://movie.douban.com/top250"</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        item = DoubanItem()</span><br><span class="line">        selector = Selector(response)</span><br><span class="line">        Movies = selector.xpath(<span class="string">'//div[@class="info"]'</span>)</span><br><span class="line">        <span class="keyword">for</span> eachMoive <span class="keyword">in</span> Movies:</span><br><span class="line">            title = eachMoive.xpath(<span class="string">'div[@class="hd"]/a/span/text()'</span>).extract()</span><br><span class="line">            fullTitle = <span class="string">''</span></span><br><span class="line">            <span class="keyword">for</span> each <span class="keyword">in</span> title:</span><br><span class="line">                fullTitle += each</span><br><span class="line">            movieInfo = eachMoive.xpath(<span class="string">'div[@class="bd"]/p/text()'</span>).extract()</span><br><span class="line">            star = eachMoive.xpath(<span class="string">'div[@class="bd"]/div[@class="star"]/span[@class="rating_num"]/text()'</span>).extract()[<span class="number">0</span>]</span><br><span class="line">            quote = eachMoive.xpath(<span class="string">'div[@class="bd"]/p[@class="quote"]/span/text()'</span>).extract()</span><br><span class="line">            <span class="keyword">if</span> quote:               <span class="comment">#有时候quote没有</span></span><br><span class="line">                quote = quote[<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                quote = <span class="string">''</span></span><br><span class="line">            <span class="comment"># print(fullTitle)</span></span><br><span class="line">            <span class="comment"># print(movieInfo)</span></span><br><span class="line">            <span class="comment"># print(star)</span></span><br><span class="line">            <span class="comment"># print(quote)</span></span><br><span class="line">            item[<span class="string">'title'</span>] = fullTitle</span><br><span class="line">            item[<span class="string">'movieInfo'</span>] = <span class="string">';'</span>.join(movieInfo)</span><br><span class="line">            item[<span class="string">'star'</span>] = star</span><br><span class="line">            item[<span class="string">'quote'</span>] = quote</span><br><span class="line">            <span class="keyword">yield</span> item</span><br><span class="line"></span><br><span class="line">        nextLink = selector.xpath(<span class="string">'//span[@class="next"]/link/@href'</span>).extract()</span><br><span class="line">        <span class="keyword">if</span> nextLink:</span><br><span class="line">            nextLink = nextLink[<span class="number">0</span>]</span><br><span class="line">            print(nextLink)</span><br><span class="line">            <span class="keyword">yield</span> Request(self.url + nextLink, callback=self.parse)</span><br></pre></td></tr></table></figure>
+
+<p>3.运行爬虫<br>在douban目录下（有一个scrapy.cfg文件的目录），使用命令</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy crawl douban -o items.json -t json</span><br></pre></td></tr></table></figure>
+
+<p>此时会生成一个items.json，里面就有我们想要的内容</p>
+<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><p>可能按照上面的步骤得不到想要的东西，那就是教程的问题所在了</p>
+<ul>
+<li>原文中</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> douban.items <span class="keyword">import</span> DoubanItem</span><br></pre></td></tr></table></figure>
+
+<p>根本找不到items.py</p>
+<p>因为items.py在上级目录<br>这里我们替换为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ..items <span class="keyword">import</span> DoubanItem</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>输出的json文件中，中文编码格式不对<br>这里需要在settings.py中设置一下，添加语句</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FEED_EXPORT_ENCODING = <span class="string">'utf-8'</span></span><br></pre></td></tr></table></figure>
+
+<p>解决了上述问题，在运行一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy crawl douban</span><br></pre></td></tr></table></figure>
+
+<p>即可得到想要的结果</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+
