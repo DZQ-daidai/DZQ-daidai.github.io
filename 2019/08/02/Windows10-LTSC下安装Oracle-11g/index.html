@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="呆呆">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Windows10 LTSC下安装Oracle 11g"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="呆忆"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://DZQ-daidai.github.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="呆忆" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>呆忆</title>
+
+  <!-- Bootstrap CSS -->
+  
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+  <!-- Custom CSS -->
+  
+  
+<link rel="stylesheet" href="/css/style.light.css">
+
+
+  <!-- Google Analytics -->
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Windows10 LTSC下安装Oracle 11g</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a target="_blank" rel="noopener" href="https://github.com/DZQ-daidai">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:2063109448@qq.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By 呆呆</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2019-08-02</span>
+            <span class="time">12:40:39</span>
+          </span>
+          
+          <!--  Categories  -->
+            <span class="categories info">Under 
+
+<a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+</span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/Oracle/">#Oracle</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h2 id="1-在官网下载Oracle-11g（需要注册登录）"><a href="#1-在官网下载Oracle-11g（需要注册登录）" class="headerlink" title="1.在官网下载Oracle 11g（需要注册登录）"></a>1.在官网下载Oracle 11g（需要注册登录）</h2><span id="more"></span>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="http://download.oracle.com/otn/nt/oracle11g/112010/win64_11gR2_database_1of2.zip">http://download.oracle.com/otn/nt/oracle11g/112010/win64_11gR2_database_1of2.zip</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://download.oracle.com/otn/nt/oracle11g/112010/win64_11gR2_database_2of2.zip">http://download.oracle.com/otn/nt/oracle11g/112010/win64_11gR2_database_2of2.zip</a></p>
+<p>两个都要下载下来，解压到同一目录下的同一文件夹</p>
+</li>
+</ul>
+<h2 id="2-将下载好的zip同时选中，然后解压到同一目录下的同一文件夹"><a href="#2-将下载好的zip同时选中，然后解压到同一目录下的同一文件夹" class="headerlink" title="2.将下载好的zip同时选中，然后解压到同一目录下的同一文件夹"></a>2.将下载好的zip同时选中，然后解压到同一目录下的同一文件夹</h2><p>然后依次进入stage/cvu/找到 cvu_prereq.xml 用记事本打开，<br>将下面代码添加进去</p>
+<pre><code>     &lt;OPERATING_SYSTEM RELEASE=&quot;6.2&quot;&gt;
+               &lt;VERSION VALUE=&quot;3&quot;/&gt;
+               &lt;ARCHITECTURE VALUE=&quot;64-bit&quot;/&gt;
+               &lt;NAME VALUE=&quot;Windows 10&quot;/&gt;
+               &lt;ENV_VAR_LIST&gt;
+                   &lt;ENV_VAR NAME=&quot;PATH&quot; MAX_LENGTH=&quot;1023&quot; /&gt;
+               &lt;/ENV_VAR_LIST&gt;
+     &lt;/OPERATING_SYSTEM&gt;
+</code></pre>
+<p>如果不添加这段代码，在点击setup.exe安装oracle的时候可能会出现: [INS-13001]环境不满足最低要求 的错误。</p>
+<h2 id="3-先不要急着安装，配置-NET-Framework-3-5"><a href="#3-先不要急着安装，配置-NET-Framework-3-5" class="headerlink" title="3.先不要急着安装，配置 NET Framework 3.5"></a>3.先不要急着安装，配置 NET Framework 3.5</h2><p>首先打开 <strong>控制面板</strong> 找到 <strong>程序和功能</strong> ，点击左侧的 <strong>启用或关闭Windows功能</strong> 开启NET Framework 3.5，如果无法安装则是禁用了系统更新，开启即可</p>
+<h2 id="4-安装Oracle-11g"><a href="#4-安装Oracle-11g" class="headerlink" title="4.安装Oracle 11g"></a>4.安装Oracle 11g</h2><ul>
+<li>点击运行 <strong>“setup.exe”</strong></li>
+<li>在”安全选项”界面，不用填写电子邮件，取消勾选”我希望通过 My Oracle Support 接收安全更新”</li>
+<li>点击下一步。出现如图所示警告点击”是”</li>
+<li>安全选项选择“创建和配置数据库”</li>
+<li>系统类选择“桌面类”，点击下一步</li>
+<li>“典型安装”里面需要注意了，在设置管理口令（也就是管理员密码）的时候特别坑，需要设置一个包含数字、大小写字母的8-30位密码，并且这个密码不能以数字开头，否则快安装完的时候会报 “ora-28000” 错误。具体规则如下：<br>1、必须以字母开始。<br>2、长度不能超过30个单字节字符。<br>3、只能包括A-Z，a-z，0-9，_，$和#。<br>4、不能在相同用户下建立两个同名的对象。<br>5、不能使用保留字和关键字<br>设置好密码后点击下一步。</li>
+<li>在概要里面点击“完成”。等待安装进程。</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+
+<script src="/js/highlight.pack.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+
